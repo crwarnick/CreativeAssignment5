@@ -1,0 +1,33 @@
+body
+{
+  text-align: center;
+  background-color: rgb(249, 249, 137);
+}
+canvas
+{
+  border: solid black;
+  margin-top: 2%;
+  margin-right: 40%;
+}
+h1
+{
+  background-color: rgb(73, 188, 216);
+  font-family: "Permanent Marker";
+  font-size: 30px;
+}
+#scores
+{
+  position: absolute;
+  background-color: rgb(73, 188, 216);
+  font-family: "Permanent Marker";
+  font-size: 20px;
+  text-align: center;
+  right: 0;
+  top: 20%;
+  width: 400px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+
+
