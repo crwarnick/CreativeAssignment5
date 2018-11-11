@@ -6,10 +6,15 @@ var bigFish = [];
 var redFish = [];
 var myScore;
 var background;
+var gameOver;
+var gulp;
+var bigGulp;
 
 function startGame() {
     myGameArea.start();
     getScore();
+    gulp = new sound("http://www.sounds.beachware.com/2illionzayp3may/jhyavvu/TINYGULP.mp3");
+    bigGulp = new sound("Dragon Bite-SoundBible.com-1625781385.mp3");
     hungryFish = new component(40, 30, "https://ubisafe.org/images/fished-clipart-bluefish-6.png", 10, 120, "image");
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
     background = new component(700, 400, "https://us.123rf.com/450wm/clairev/clairev1503/clairev150300120/38471601-stock-vector-ocean-underwater-theme-background.jpg?ver=6", 0, 0, "image");
@@ -97,6 +102,10 @@ function updateGameArea() {
     var x, y;
     for (var i = 0; i < bigFish.length; i++) {
         if (hungryFish.crashWith(bigFish[i])) {
+            bigGulp.play();
+            gameOver = new component("50px", "Consolas", "black", 225, 100, "text");
+            gameOver.text = "GAME OVER";
+            gameOver.update();
             myGameArea.stop();
             postScore();
             return;
@@ -108,12 +117,14 @@ function updateGameArea() {
     myGameArea.frameNo += 1;
     for (i = 0; i < littleFish.length; i++) {
         if (hungryFish.crashWith(littleFish[i])) {
+            gulp.play();
             myGameArea.fishEaten += 10;
             littleFish.splice(i, 1);
         }
     }
     for (i = 0; i < redFish.length; i++) {
         if (hungryFish.crashWith(redFish[i])) {
+            gulp.play();
             myGameArea.fishEaten += 50;
             redFish.splice(i, 1);
         }
@@ -163,6 +174,21 @@ function updateGameArea() {
     hungryFish.update();
 }
 
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    };
+    this.stop = function(){
+        this.sound.pause();
+    };
+}
+
 function postScore()
 {
     var newScore = {Score: myGameArea.fishEaten};
@@ -182,12 +208,21 @@ function postScore()
 function getScore()
 {
     $.getJSON("score", function(data) {
-        var scores = "<h2>Previous Scores:</h2>" + "<ul>";
+        var scores = [];
         for(var score in data) {
             var scr = data[score];
-            scores += "<li>" + scr.Score + "</li>";
-      }
-      scores += "</ul>";
-      $("#scores").html(scores);
+            scores.push(scr.Score);
+            scores.sort(function(a, b){return b-a});
+        }
+        var scoreBoard = "<h2>High Scores:</h2>" + "<ol>";
+        for (var i = 0; i < 5; i++) {
+            scoreBoard += "<li>" + scores[i] + "</li>";
+        }
+        scoreBoard += "</ul>";
+        $("#scores").html(scoreBoard);
     })
 }
+
+
+
+
